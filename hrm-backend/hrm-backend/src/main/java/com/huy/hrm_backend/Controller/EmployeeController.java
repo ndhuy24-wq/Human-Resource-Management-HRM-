@@ -1,5 +1,6 @@
 package com.huy.hrm_backend.Controller;
 import com.huy.hrm_backend.Entity.Employee;
+import com.huy.hrm_backend.Exception.ResourceNotFoundException;
 import com.huy.hrm_backend.Repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,8 @@ import java.util.List;
 import com.huy.hrm_backend.Service.EmployeeService;
 import com.huy.hrm_backend.Dto.EmployeeRequest;
 import jakarta.validation.Valid;
+import com.huy.hrm_backend.Exception.ResourceNotFoundException;
+import com.huy.hrm_backend.Exception.ResourceNotFoundException;
 
 @RestController //ResAPI
 @RequestMapping("/api/employees") //BaseURL http://localhost:8080/api/employees
@@ -43,10 +46,11 @@ public class EmployeeController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")//Spring tự query: SELECT * FROM EMPLOYEES WHERE ID = ?
 
     public Employee getEmployeeById(@PathVariable Long id){
-        return employeeService.findById(id).orElse(null); //Spring tự query: SELECT * FROM EMPLOYEES WHERE ID = ?
+        return employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id)
+        );
     }
 
 
@@ -57,7 +61,7 @@ public class EmployeeController {
             @PathVariable Long id,
             @RequestBody Employee employeeRequest
     ){
-        Employee employee = employeeService.findById(id).orElse(null);
+        Employee employee = employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id));
         if(employee == null){
             return null;
         }
@@ -80,7 +84,7 @@ public class EmployeeController {
     }
     @DeleteMapping ("/{id}") //HTTP DELETE Method. (DELETE/api/employees) tương đương DELETE
     public String deleteEmployee(@PathVariable Long id){
-        Employee employee = employeeService.findById(id).orElse(null);
+        Employee employee = employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id));
 
         if(employee == null){
             return "Employee not found";
