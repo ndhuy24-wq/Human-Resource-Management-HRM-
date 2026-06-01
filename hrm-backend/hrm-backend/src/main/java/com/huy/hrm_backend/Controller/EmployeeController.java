@@ -1,96 +1,63 @@
 package com.huy.hrm_backend.Controller;
+
+import com.huy.hrm_backend.Dto.EmployeeRequest;
+import com.huy.hrm_backend.Dto.EmployeeResponse;
 import com.huy.hrm_backend.Entity.Employee;
-import com.huy.hrm_backend.Exception.ResourceNotFoundException;
-import com.huy.hrm_backend.Repository.EmployeeRepository;
+import com.huy.hrm_backend.Service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import com.huy.hrm_backend.Service.EmployeeService;
-import com.huy.hrm_backend.Dto.EmployeeRequest;
-import jakarta.validation.Valid;
-import com.huy.hrm_backend.Exception.ResourceNotFoundException;
-import com.huy.hrm_backend.Exception.ResourceNotFoundException;
 
-@RestController //ResAPI
-@RequestMapping("/api/employees") //BaseURL http://localhost:8080/api/employees
-@RequiredArgsConstructor //Lombok tự tạo constructer
+@RestController
+@RequestMapping("/api/employees")
+@RequiredArgsConstructor
 @CrossOrigin("*")
-
 public class EmployeeController {
-    private final EmployeeRepository employeeService;
 
-    @GetMapping //HTTP GET Method. (GET /api/employees) tương đương SELECT * FROM EMPLOYEES
-    public List<Employee> getAllEmployees(){
-        return employeeService.findAll();
+    private final EmployeeService employeeService;
+
+    @GetMapping
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 
-
-
-
-    @PostMapping //HTTP POST Method. (POST/api/employees) tương đương INSERT INTO
-    public Employee createEmployee(@Valid @RequestBody EmployeeRequest request){
-       Employee employee = new Employee();
-
-       employee.setFullName(request.getFullName());
-       employee.setEmail(request.getEmail());
-       employee.setPhone(request.getPhone());
-       employee.setGender(request.getGender());
-       employee.setDateOfBirth(request.getDateOfBirth());
-       employee.setAddress(request.getAddress());
-       employee.setPositionName(request.getPositionName());
-       employee.setSalaryBase(request.getSalaryBase());
-       employee.setDepartmentId(request.getDepartmentId());
-       employee.setUserId(request.getUserID());
-
-        return employeeService.save(employee);
+    @GetMapping("/{id}")
+    public EmployeeResponse getEmployeeById(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id);
     }
 
+    @PostMapping
+    public EmployeeResponse createEmployee(@Valid @RequestBody EmployeeRequest request) {
 
-    @GetMapping("/{id}")//Spring tự query: SELECT * FROM EMPLOYEES WHERE ID = ?
+        Employee employee = new Employee();
 
-    public Employee getEmployeeById(@PathVariable Long id){
-        return employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id)
-        );
+        employee.setFullName(request.getFullName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setGender(request.getGender());
+        employee.setDateOfBirth(request.getDateOfBirth());
+        employee.setAddress(request.getAddress());
+        employee.setPositionName(request.getPositionName());
+        employee.setSalaryBase(request.getSalaryBase());
+        employee.setDepartmentId(request.getDepartmentId());
+
+
+        return employeeService.createEmployee(employee);
     }
 
-
-
-    @PutMapping("/{id}") //HTTP put Method. (PUT/api/employees) tương đương UPDATER
-
-    public Employee updateEmployee(
+    @PutMapping("/{id}")
+    public EmployeeResponse updateEmployee(
             @PathVariable Long id,
             @RequestBody Employee employeeRequest
-    ){
-        Employee employee = employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id));
-        if(employee == null){
-            return null;
-        }
-        employee.setFullName(employeeRequest.getFullName());
-        employee.setEmail(employeeRequest.getEmail());
-        employee.setPhone(employeeRequest.getPhone());
-        employee.setGender(employeeRequest.getGender());
-        employee.setDateOfBirth(employeeRequest.getDateOfBirth());
-        employee.setAddress(employeeRequest.getAddress());              //Update dữ liệu mới vào object cũ.
-        employee.setPositionName(employeeRequest.getPositionName());
-        employee.setSalaryBase(employeeRequest.getSalaryBase());
-        employee.setDepartmentId(employeeRequest.getDepartmentId());
-        employee.setUserId(employeeRequest.getUserId());
-
-        return employeeService.save(employee); //Hibernate tự hiểu: Có ID rồi UPDATE
-
-
-
-
+    ) {
+        return employeeService.updateEmployee(id, employeeRequest);
     }
-    @DeleteMapping ("/{id}") //HTTP DELETE Method. (DELETE/api/employees) tương đương DELETE
-    public String deleteEmployee(@PathVariable Long id){
-        Employee employee = employeeService.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee not found with id: " + id));
 
-        if(employee == null){
-            return "Employee not found";
-        }
-        employeeService.deleteById(id);
-
-        return "Delete employee succesfully";
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return "Delete employee successfuly";
     }
 }

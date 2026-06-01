@@ -1,12 +1,17 @@
 package com.huy.hrm_backend.Service;
+import com.huy.hrm_backend.Dto.EmployeeResponse;
 import com.huy.hrm_backend.Entity.Employee;
 import  java.util.List;
 
 public interface EmployeeService {
-    List<Employee> getAllEmployees();
-    Employee getEmployeeById (Long id);
-    Employee createEmployee (Employee employee);
-    Employee updateEmployeeById(Long id, Employee employeeRequest);
+    List<EmployeeResponse> getAllEmployees();
+
+    EmployeeResponse getEmployeeById (Long id);
+
+
+    EmployeeResponse  createEmployee (Employee employee);
 
     void deleteEmployee(Long id);
+
+    EmployeeResponse  updateEmployee(Long id, Employee employeeRequest);
 }
