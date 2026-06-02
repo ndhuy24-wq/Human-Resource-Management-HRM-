@@ -8,17 +8,22 @@ public class EmployeeRequest {
     @NotBlank(message = "Full name is required")
     private String fullName;
 
+
     @Email(message = "Email invalid")
     @NotBlank(message = "Email is required")
     private String email;
 
     @NotBlank (message="Phone is requiredd")
-    @Size(min = 10, max = 11, message = "Phone must be 10 - 11 number")
+    @Pattern(
+            regexp = "^(0[0-9]{9,10})$",
+            message = "Phone number is invalid"
+    )
     private  String phone;
 
     @NotBlank(message = "Gender is required")
     private  String gender;
 
+    @Past(message = "Date of birth must be in the past")
     private LocalDate dateOfBirth;
 
     private String address;
@@ -29,8 +34,9 @@ public class EmployeeRequest {
     @Positive(message = "Salary must be greater than 0")
     private  Double salaryBase;
 
+    @NotNull(message = "Department is required")
     private Long departmentId;
 
-    private Long userID;
+    private Long userId;
 
 }

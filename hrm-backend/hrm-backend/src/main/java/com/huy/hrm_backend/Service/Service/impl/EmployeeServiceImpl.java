@@ -2,6 +2,7 @@ package com.huy.hrm_backend.Service.Service.impl;
 
 import com.huy.hrm_backend.Dto.EmployeeResponse;
 import com.huy.hrm_backend.Entity.Employee;
+import com.huy.hrm_backend.Exception.EmailAlreadyExistsException;
 import com.huy.hrm_backend.Exception.ResourceNotFoundException;
 import com.huy.hrm_backend.Repository.EmployeeRepository;
 import com.huy.hrm_backend.Service.EmployeeService;
@@ -32,6 +33,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse createEmployee(Employee employee) {
+        if(employeeRepository.existsByEmail(employee.getEmail())){
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
         Employee savedEmployee = employeeRepository.save(employee);
 
         return mapToResponse(savedEmployee);
@@ -45,6 +49,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                         "Employee not found with id: " + id
                 )
         );
+        if (employeeRepository.existsByEmailAndIdNot(
+                employeeRequest.getEmail(),id
+        )){
+            throw new EmailAlreadyExistsException(
+                    "Email already exists"
+            );
+        }
 
         employee.setFullName(employeeRequest.getFullName());
         employee.setEmail(employeeRequest.getEmail());

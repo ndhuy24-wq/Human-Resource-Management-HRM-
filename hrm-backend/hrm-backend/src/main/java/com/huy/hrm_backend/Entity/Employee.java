@@ -43,6 +43,6 @@ public class Employee {
    @Column (name = "DEPARTMENT_ID")
     private Long departmentId;
 
-   @Column(name ="USER_id")
+   @Column(name ="USER_ID")
     private Long userId;
 }
