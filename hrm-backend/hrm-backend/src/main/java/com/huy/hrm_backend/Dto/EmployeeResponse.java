@@ -4,8 +4,13 @@ import lombok.Data;
 @Data
 public class EmployeeResponse {
     private Long id;
+
     private String fullName;
+
     private  String email;
+
     private String phone;
+
     private  String positionName;
+
 }

@@ -11,7 +11,8 @@ public interface EmployeeService {
 
     EmployeeResponse  createEmployee (Employee employee);
 
-    void deleteEmployee(Long id);
 
     EmployeeResponse  updateEmployee(Long id, Employee employeeRequest);
+
+    void deleteEmployee(Long id);
 }
