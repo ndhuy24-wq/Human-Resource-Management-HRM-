@@ -18,7 +18,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping
-    public List<DepartmentResponse> getAllDepartment(){
+    public List<DepartmentResponse> getAllDepartments(){
         return departmentService.getAllDepartments();
     }
 
@@ -52,7 +52,7 @@ public class DepartmentController {
     public String deleteDepartment (@PathVariable Long id){
         departmentService.deleteDepartment(id);
 
-        return "Delete departmant successfuly";
+        return "Delete department successfully";
     }
 }
 

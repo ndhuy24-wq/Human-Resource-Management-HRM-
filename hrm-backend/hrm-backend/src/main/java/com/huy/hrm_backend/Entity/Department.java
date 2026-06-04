@@ -9,7 +9,7 @@ public class Department {
     @GeneratedValue (strategy = GenerationType.SEQUENCE , generator = "department_seq") // tự sinh id
     @SequenceGenerator(
             name = "department_seq",
-            sequenceName ="DEPARTMENTS_seq", //Map với Department_seq Oracle
+            sequenceName ="DEPARTMENTS_SEQ", //Map với Department_seq Oracle
             allocationSize = 1
     )
     @Column(name = "ID")

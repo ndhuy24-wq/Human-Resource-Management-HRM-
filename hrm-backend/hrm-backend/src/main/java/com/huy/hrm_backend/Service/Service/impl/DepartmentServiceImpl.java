@@ -2,6 +2,7 @@ package com.huy.hrm_backend.Service.Service.impl;
 
 import com.huy.hrm_backend.Dto.DepartmentResponse;
 import com.huy.hrm_backend.Entity.Department;
+import com.huy.hrm_backend.Exception.DepartmentAlreadyExistsException;
 import com.huy.hrm_backend.Exception.ResourceNotFoundException;
 import com.huy.hrm_backend.Repository.DepartmentRepository;
 import com.huy.hrm_backend.Service.DepartmentService;
@@ -13,6 +14,8 @@ import java.util.List;
 @Service
 
 public class DepartmentServiceImpl implements DepartmentService {
+    private final DepartmentRepository departmentRepository;
+
     private DepartmentResponse mapToResponse (Department department){
         DepartmentResponse response = new DepartmentResponse();
         response.setId(department.getId());
@@ -20,8 +23,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         response.setDescription(department.getDescription());
         return response;
     }
-
-    private final DepartmentRepository departmentRepository;
 
     @Override
     public List<DepartmentResponse> getAllDepartments(){
@@ -38,8 +39,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
     @Override
     public DepartmentResponse createDepartment (Department department){
-        Department savedDepartment = departmentRepository.save(department);
-        return mapToResponse(savedDepartment);
+       if (departmentRepository.existsByName (department.getName())) {
+           throw new DepartmentAlreadyExistsException("Department already exists");
+       }
+       Department savedDepartment = departmentRepository.save(department);
+       return mapToResponse(savedDepartment);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         return mapToResponse(updatedDepartment);
     }
     @Override
-    public  void  deleteDepartment(Long id){
+    public void  deleteDepartment(Long id){
         Department department = departmentRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Department not found with id: " + id
                 )
