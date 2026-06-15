@@ -1,19 +1,24 @@
 package com.huy.hrm_backend.Service;
-import com.huy.hrm_backend.Dto.EmployeeResponse;
-import com.huy.hrm_backend.Entity.Employee;
-import  java.util.List;
 
+import com.huy.hrm_backend.Dto.EmployeeRequest;
+import com.huy.hrm_backend.Dto.EmployeeResponse;
+import java.util.List;
+
+// Interface định nghĩa các nghiệp vụ liên quan đến Nhân viên
 public interface EmployeeService {
+    
+    // Lấy danh sách toàn bộ nhân viên
     List<EmployeeResponse> getAllEmployees();
 
-    EmployeeResponse getEmployeeById (Long id);
+    // Tìm kiếm nhân viên theo ID
+    EmployeeResponse getEmployeeById(Long id);
 
+    // Tạo mới nhân viên từ thông tin DTO gửi từ client
+    EmployeeResponse createEmployee(EmployeeRequest request);
 
-    EmployeeResponse  createEmployee (Employee employee);
+    // Cập nhật thông tin nhân viên theo ID và DTO mới
+    EmployeeResponse updateEmployee(Long id, EmployeeRequest request);
 
-
-    EmployeeResponse  updateEmployee(Long id, Employee employeeRequest);
-
-
+    // Xóa nhân viên theo ID
     void deleteEmployee(Long id);
 }
